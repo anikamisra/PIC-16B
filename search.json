@@ -7,11 +7,18 @@
     "text": "About this blog"
   },
   {
-    "objectID": "posts/welcome/index.html",
-    "href": "posts/welcome/index.html",
-    "title": "Welcome To My Blog Anika Misra rocks",
+    "objectID": "posts/hw-0/index.html",
+    "href": "posts/hw-0/index.html",
+    "title": "HW0",
     "section": "",
-    "text": "This is the first post in a Quarto blog Anika Misra is awesome yay. Welcome!\n\nSince this post doesn’t specify an explicit image, the first image in the post will be used in the listing page of posts."
+    "text": "In today’s dataset from Github, I will be explaining how to create a simple visualization from the Palmer Penguins dataset. There are many features in this dataset, such as species, region, island, egg stage, culmen features, body mass, gender, and delta 15 N features. However, the question we are trying to answer today is:\n\n\nLet’s get started."
+  },
+  {
+    "objectID": "posts/hw-0/index.html#improvements-and-next-steps",
+    "href": "posts/hw-0/index.html#improvements-and-next-steps",
+    "title": "HW0",
+    "section": "Improvements and next steps:",
+    "text": "Improvements and next steps:\n\ncreate DataFrames of each island and species to determine the exact range of body masses\nGet more specific statistics and exact numbers as opposed to relying on visualizations\nGet more data from Chinstrap and Gentoo penguins that comes from other islands\n\nI hope you learned something with today’s blog post! Have an ice day.\n\n\n\nHave an ice day.png\n\n\nImage sources: Ice\nPenguin"
   },
   {
     "objectID": "posts/post-with-code/index.html",
@@ -21,10 +28,17 @@
     "text": "This is a post with executable code."
   },
   {
+    "objectID": "posts/welcome/index.html",
+    "href": "posts/welcome/index.html",
+    "title": "Welcome To My Blog Anika Misra rocks",
+    "section": "",
+    "text": "This is the first post in a Quarto blog Anika Misra is awesome yay. Welcome!\n\nSince this post doesn’t specify an explicit image, the first image in the post will be used in the listing page of posts."
+  },
+  {
     "objectID": "index.html",
     "href": "index.html",
     "title": "myblog",
     "section": "",
-    "text": "Post With Code\n\n\n\n\n\n\nnews\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\nJan 16, 2024\n\n\nHarlow Malloc\n\n\n\n\n\n\n\n\n\n\n\n\nWelcome To My Blog Anika Misra rocks\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\nJan 13, 2024\n\n\nTristan O’Malley\n\n\n\n\n\n\nNo matching items"
+    "text": "HW0\n\n\n\n\n\n\nweek 2\n\n\nhomework0\n\n\n\n\n\n\n\n\n\nJan 21, 2024\n\n\nAnika Misra\n\n\n\n\n\n\n\n\n\n\n\n\nPost With Code\n\n\n\n\n\n\nnews\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\nJan 16, 2024\n\n\nHarlow Malloc\n\n\n\n\n\n\n\n\n\n\n\n\nWelcome To My Blog Anika Misra rocks\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\nJan 13, 2024\n\n\nTristan O’Malley\n\n\n\n\n\n\nNo matching items"
   }
 ]
