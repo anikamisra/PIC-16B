@@ -25,20 +25,20 @@
     "href": "posts/post-with-code/index.html",
     "title": "Post With Code",
     "section": "",
-    "text": "This is a post with executable code."
+    "text": "This python code is known as one of the most complex pieces of code ever written. If you run this in your IDE, it might blow your mind:\n\nprint(\"hello world\") \n\nhello world"
   },
   {
     "objectID": "posts/welcome/index.html",
     "href": "posts/welcome/index.html",
-    "title": "Welcome To My Blog Anika Misra rocks",
+    "title": "Welcome To My Blog",
     "section": "",
-    "text": "This is the first post in a Quarto blog Anika Misra is awesome yay. Welcome!\n\nSince this post doesn’t specify an explicit image, the first image in the post will be used in the listing page of posts."
+    "text": "This is the first post in my Quarto blog. Just testing things out. Here is a painting I made two days ago."
   },
   {
     "objectID": "index.html",
     "href": "index.html",
     "title": "myblog",
     "section": "",
-    "text": "HW0\n\n\n\n\n\n\nweek 2\n\n\nhomework0\n\n\n\n\n\n\n\n\n\nJan 21, 2024\n\n\nAnika Misra\n\n\n\n\n\n\n\n\n\n\n\n\nPost With Code\n\n\n\n\n\n\nnews\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\nJan 16, 2024\n\n\nHarlow Malloc\n\n\n\n\n\n\n\n\n\n\n\n\nWelcome To My Blog Anika Misra rocks\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\nJan 13, 2024\n\n\nTristan O’Malley\n\n\n\n\n\n\nNo matching items"
+    "text": "HW0\n\n\n\n\n\n\nweek 2\n\n\nhomework0\n\n\n\n\n\n\n\n\n\nJan 21, 2024\n\n\nAnika Misra\n\n\n\n\n\n\n\n\n\n\n\n\nWelcome To My Blog\n\n\n\n\n\n\nart\n\n\n\n\n\n\n\n\n\nJan 20, 2024\n\n\nAnika Misra\n\n\n\n\n\n\n\n\n\n\n\n\nPost With Code\n\n\n\n\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\nJan 16, 2024\n\n\nAnika Misra\n\n\n\n\n\n\nNo matching items"
   }
 ]
