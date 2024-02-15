@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.541">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Anika Misra">
+<meta name="dcterms.date" content="2024-02-14">
+
+<title>myblog - How to create a simple (pink) Message Bank Webapp that submits and views messages using Python and Flask</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">myblog</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">How to create a simple (pink) Message Bank Webapp that submits and views messages using Python and Flask</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">week 6</div>
+                <div class="quarto-category">homework3</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Anika Misra </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">February 14, 2024</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<section id="welcome" class="level1">
+<h1>Welcome!</h1>
+<p>Today we will be creating a <strong>webapp</strong> using Python and Flask to submit and view messages. A “webapp” is exactly what it sounds like: it’s like an application (or, app) you can deploy it on the internet (or, web). In today’s blog, the app won’t actually be published on the internet, but we will still be accessing it on our local browser.</p>
+<p>I will be describing how to set up this project in detail. If you want more details, a link to the project repository is here:</p>
+<p>https://github.com/anikamisra/pic16b-hw3-webapp/</p>
+</section>
+<section id="section-0-setting-up-files" class="level1">
+<h1>Section 0: Setting up files</h1>
+<p>There is a lot that goes into making a webapp. Here is a summary of where each file should go, so you know exactly how to build this Message Bank. We will be getting into the details of most of these files in this blog, so don’t worry if you don’t know what this means just yet. - <strong>app.py</strong>: This is the application script file, which is the main file that handles the flask application instance along with other functions. - <strong>base.html</strong>: this is the base page for the HTML website. Other HTML pages “inherit” from the base page. - <strong>submit.html</strong>: this web page contains the information necessary to submit a message, such as text box and username - <strong>view.html</strong>: this web page that you can use to view some random messages. - <strong>style.css</strong>: This CSS file allows you to modify your webapp to change up the fonts and colors. In this demo, we will be creating a pink website!</p>
+<p>Note, when you create this project, you should create a folder to contain these files. 1. app.py should be in your main project directory.<br>
+2. base.html, submit.html, and view.html should be in a folder called “templates”, which is in your project directory folder<br>
+3. style.css should be in a folder called “static”. which is in your project directory folder</p>
+<p>So here is what your files should look like:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/90acaa4c-7d32-49dc-b0e0-a7b7287a00c2-1-cdbc91b1-f958-42dd-999c-b536463f0607.png" class="img-fluid figure-img"></p>
+<figcaption>Screenshot 2024-02-14 at 6.53.56 PM.png</figcaption>
+</figure>
+</div>
+<p>With all this in mind, let’s go ahead and get started with our webap. # Section 1: Non-route functions in app.py</p>
+<p>Let’s write the application script file. To do this, I will discuss, in detail, each of the functions used in the app.py file that are not “route” functions, which we will define later, also in the application script. The functions we define now are going to be used by the route functions later. Let’s start with the first function.</p>
+<section id="function-1-get_message_db" class="level2">
+<h2 class="anchored" data-anchor-id="function-1-get_message_db">Function 1: get_message_db</h2>
+<p>This function handles database creation for messages. First, make sure to import the necessary packages into app.py:</p>
+<div id="68cd9086-2275-45d1-887d-2f8a53b130c4" class="cell" data-tags="[]" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> flask <span class="im">import</span> Flask, request, render_template</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sqlite3</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> flask <span class="im">import</span> g</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> random</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now, let’s create the method. The way this function works is: 1. First it will check if the SQL message database, called message_db, exists. 2. If the database doesn’t exist yet, then it will create a new one. 3. Open a connection to the message database and store it in g.message_db 4. Create a cursor with the database object (used for SQL commands) 5. Execute SQL command to create a “messages” table if it does not already exist 6. Return the database connection.</p>
+<p>Here’s a look at the code:</p>
+<div id="dae8e1d3-db20-461f-8e79-39725a8693d7" class="cell" data-tags="[]" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_message_db():</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">    handles database creation for messages  </span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># check if message_db exists</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="st">'message_db'</span> <span class="kw">not</span> <span class="kw">in</span> g:</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>        <span class="co"># connect database </span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>        g.message_db <span class="op">=</span> sqlite3.<span class="ex">connect</span>(<span class="st">'messages_db.sqlite'</span>)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    cursor <span class="op">=</span> g.message_db.cursor()</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># check for messages table  </span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    cursor.execute(<span class="st">'CREATE TABLE IF NOT EXISTS messages (id INTEGER PRIMARY KEY, handle TEXT, message TEXT)'</span>)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> g.message_db</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Great! We’ve created our first method. But, what will this functio be used with? Now, let’s define the second method in our aplication script file:</p>
+</section>
+<section id="function-2-insert_message" class="level2">
+<h2 class="anchored" data-anchor-id="function-2-insert_message">Function 2: insert_message</h2>
+<p>This function will handle user insertion of messages into the database.</p>
+<p>Here is how it works: 1. Connect database by calling get_message_db() 2. Connect cursor 3. Execute SQL command to insert message and user id into messages table 4. Run commit() function to ensure the row insertion has been saved 5. Close database connection</p>
+<p>Here is what the code looks like:</p>
+<div id="f4e809a3-373f-4c8b-a7ad-983ea741fcdc" class="cell" data-tags="[]" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> insert_message(request):</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">    insert message into database after user submission </span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># connect database </span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    db <span class="op">=</span> get_message_db()</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    cursor <span class="op">=</span> db.cursor()</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    cursor.execute(<span class="st">'INSERT INTO messages (handle, message) VALUES (?, ?)'</span>, (request.form[<span class="st">'user'</span>], request.form[<span class="st">'message'</span>]))</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># save </span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    db.commit()</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># close the database connection </span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    db.close()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>So, this function works by calling the previously defined function, get_message_db(). Furthermore, we can see how it specifically inserts the username and the message of the person who posted it. Don’t worry too much about “resquest.form” for now - we will get into this later.</p>
+</section>
+<section id="function-3-random_messages" class="level2">
+<h2 class="anchored" data-anchor-id="function-3-random_messages">Function 3: random_messages</h2>
+<p>The last non-route function we will define in our application instance file is the random_messages function. This function is used to generate 5 random messages that our in our database (or, fewer, if there aren’t 5 submitted messages yet). We will call this function when we view the messages in our webapp. Here is how it works: 1. Connect to database by calling Function # 1 2. Connect cursor and execute SQL command of selecting all messages 3. Define a cursor object, messages, that selects all messages and usernames submitted 4. Close database connection 5. Utilize random library to generate n messages from “messages” cursor object. If there are less than n messages in the database, then select however many are in the database.</p>
+<p>Let’s take a look at the code:</p>
+<div id="cca285f2-1df6-4eb9-9802-d51144ea124b" class="cell" data-tags="[]" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> random_messages(n):</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">    returns n (or fewer) random messages for viewing </span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># connect database and get messages</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    db <span class="op">=</span> get_message_db()</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    cursor <span class="op">=</span> db.cursor()</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    cursor.execute(<span class="st">'SELECT * FROM messages'</span>)</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    messages <span class="op">=</span> cursor.fetchall()</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># close connection </span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    db.close()</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># return n messages (or, fewer if there aren't n messages)</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> random.sample(messages, <span class="bu">min</span>(n, <span class="bu">len</span>(messages)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Great! Now, we have defined our non-route functions in the application, let’s get onto the route functions.</p>
+</section>
+</section>
+<section id="section-2-route-functions-in-app.py" class="level1">
+<h1>Section 2: Route functions in app.py</h1>
+<p>A route is a URL pattern that the Flask application responds to. We use a decorator, called “<span class="citation" data-cites="app.route">@app.route</span>”, to ensure that the specific function is run when this URL pattern is visited. In your app.py file, add the following line:</p>
+<div id="c9d90ac4-120f-49fb-89b7-d12e38ebcb26" class="cell" data-tags="[]" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>app <span class="op">=</span> Flask(<span class="va">__name__</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This will create a flask web server instance no matter the module you are in. Now, let’s define the first route function.</p>
+<section id="function-4-home-page" class="level2">
+<h2 class="anchored" data-anchor-id="function-4-home-page">Function 4: home page</h2>
+<p>This function will render the HTML template to create our home page. We want our default page to be a simple page that allows the user to navigate to wherever they want to go. So, we will only use the ‘GET’ method here.</p>
+<div id="f6a42515-f457-460f-9236-3b39304d28f9" class="cell" data-tags="[]" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># url route function for home page     </span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="at">@app.route</span>(<span class="st">'/'</span>, methods<span class="op">=</span>[<span class="st">'GET'</span>])</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> home():</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># render submit.html page </span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> render_template(<span class="st">'base.html'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We specify the method as ‘GET’ because we will not be posting any data here. It is simply the home page that takes us to either submitting, or viewing a message. This template is the “base” that the other HTML pages, which are view.html and submit.html, will “inherit” from. Here is what base.html looks like:</p>
+<section id="base.html" class="level3">
+<h3 class="anchored" data-anchor-id="base.html">base.html</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/dc23d1f5-b462-4923-951c-ef945c837ba8-1-53dcfb07-86fe-4c1f-9f55-2737cc4f7fc4.png" class="img-fluid figure-img"></p>
+<figcaption>Screenshot 2024-02-14 at 6.54.33 PM.png</figcaption>
+</figure>
+</div>
+<p>As we can see, there are only two links on the page that take us to “submit” and “messages”. Now, let’s define the route functions for these two pages. Furthermore, we can incorporate the style.css file that we want in order to customize our website. In my style.css file, I made the background of my webpage pink. Here is what the home page looks like:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/7ecc2df1-093a-4925-88d8-8f0e7f50a10e-1-3445a577-317b-4347-bffa-e299584979c5.png" class="img-fluid figure-img"></p>
+<figcaption>Screenshot 2024-02-14 at 6.13.03 PM.png</figcaption>
+</figure>
+</div>
+<p>(We will learn more about how to get this running on your local browser in Section 3.)</p>
+<p>So pink, so beautiful! (Note, I made it pink and changed the font in “style.css”.)</p>
+<p>Now, let’s create the route functions to render “submit.html” and “view.html”, which will allow us to actually use those cute links that are on our home page.</p>
+</section>
+</section>
+<section id="function-5-submit-page" class="level2">
+<h2 class="anchored" data-anchor-id="function-5-submit-page">Function 5: Submit page</h2>
+<p>In this function, we will render the submit.html template, which will allow us to actually submit messages! Yay! In order to do this, we will use both the ‘GET’ and ‘POST’ methods, since we need to respond to HTTP requests and also transmit the data of the submitted message. Here is how it works:</p>
+<ol type="1">
+<li>Set message and user to none before anything has been inputted.</li>
+<li>Once the user has submitted the form (“post” button has been clicked), send in the data as an HTTP request.</li>
+</ol>
+<ul>
+<li>To do this, we use Flask’s “request.form”, which is a type of special dictionary used to store these HTTP requests</li>
+</ul>
+<ol start="3" type="1">
+<li>Call the previously defined insert_message function with the request as an argument.</li>
+</ol>
+<ul>
+<li>Remember how we used “(request.form[‘user’], request.form[‘message’]) in the SQL command? This is where it comes from.</li>
+</ul>
+<ol start="4" type="1">
+<li>Render submit.html template. We will “pass in” the user’s name and message because it will be used in the html page.</li>
+</ol>
+<p>Here is what the function should look like:</p>
+<div id="56377231-ed82-4843-bbb1-d79d2eb4e84c" class="cell" data-tags="[]" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># url route function for submit page  </span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="at">@app.route</span>(<span class="st">'/submit'</span>, methods<span class="op">=</span>[<span class="st">'GET'</span>, <span class="st">'POST'</span>])</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> submit():</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    message <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    user <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># handle user posting </span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> request.method <span class="op">==</span> <span class="st">'POST'</span>:</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>        user <span class="op">=</span> request.form[<span class="st">'user'</span>]</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>        message <span class="op">=</span> request.form[<span class="st">'message'</span>]</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>        <span class="co"># call insert_message function </span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>        insert_message(request)</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> render_template(<span class="st">'submit.html'</span>, user<span class="op">=</span>user, message<span class="op">=</span>message)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We will pass in user into submit.html because we want to thank the user for their submission. Here is what the submit.html page should look like:</p>
+<section id="submit.html" class="level3">
+<h3 class="anchored" data-anchor-id="submit.html">submit.html</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/305cea2a-4be6-4079-8851-90d111faed6d-1-dcc9ccab-2e4b-4a9b-aacf-46c4b849b186.png" class="img-fluid figure-img"></p>
+<figcaption>Screenshot 2024-02-14 at 6.56.20 PM.png</figcaption>
+</figure>
+</div>
+<p>As we can see, submit.html extends the base.html page, and thanks the user for their submission. It also stores a box for message and user. We will see what this looks like in Section 3. As of right now, the “message” variable is not used, but it is still handy to pass it in in case we want to customize our submit.html function later and use that variable.</p>
+</section>
+</section>
+<section id="function-6-view-messages-page" class="level2">
+<h2 class="anchored" data-anchor-id="function-6-view-messages-page">Function 6: View messages page</h2>
+<p>We are almost done with our functions! Finally, let’s create a function to render the view.html page. This will allow us to see 5 (or less) randomly generated messages that have been inputted.</p>
+<p>Once again, we are only using the ‘GET’ method here because we are not transmitting any data - only receiving the HTTP requests. The “messages” variable utilizes the previously defined <strong>random_messages()</strong> function to obtain and store 5 random messages that are in our messages table in the database. Then, it renders the view.html page and passes in the 5 obtained messages.</p>
+<p>Here is what the function looks like:</p>
+<div id="4ec36fbb-a72e-4139-b840-670c1658a7db" class="cell" data-tags="[]" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#  url route function for view messages page </span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="at">@app.route</span>(<span class="st">'/messages'</span>, methods<span class="op">=</span>[<span class="st">'GET'</span>])</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> messages(): </span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># generate 5 random messages to view </span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    messages <span class="op">=</span> random_messages(<span class="dv">5</span>)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> render_template(<span class="st">'view.html'</span>, messages<span class="op">=</span>messages)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>But how do the messages get used? Let’s take a look at view.html:</p>
+<section id="view.html" class="level3">
+<h3 class="anchored" data-anchor-id="view.html">view.html</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/f60d999b-d791-49c1-a0c8-b1f09fd406d7-1-09d961f9-0f51-4149-a326-b240b3e29fde.png" class="img-fluid figure-img"></p>
+<figcaption>Screenshot 2024-02-14 at 6.56.48 PM.png</figcaption>
+</figure>
+</div>
+<p>As we can see, we display the 5 random messages we obtained in an ordered list.</p>
+<p>Every time we click “View messages” on our webapp, it will rerun the url route function and obtain 5 NEW randomly selected messages.</p>
+<p>Now, it’s time to see all this in action! In the next section, I will use screenshots to show how the Message Bank webapp really works!</p>
+</section>
+</section>
+</section>
+<section id="section-3-demo-of-message-bank" class="level1">
+<h1>Section 3: Demo of Message Bank</h1>
+<p>Let’s show how this website really works. First, navigate to the directory of your project. Activate the desired terminal of your choice. Then, in your terminal, run the following line:</p>
+<p>export FLASK_ENV=development flask run</p>
+<p>Now, in your terminal, you should see something like this:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/c74ab246-d141-4f79-a381-78b3f86a5a2f-1-37190b20-bc4b-4468-bcd7-bb840252c764.png" class="img-fluid figure-img"></p>
+<figcaption>Screenshot 2024-02-14 at 6.48.05 PM.png</figcaption>
+</figure>
+</div>
+<p>The line “Running on http://….” will give you the local host ID. Paste this line into the browser of your choice. I already showed us what the “home page” looks like. Now, assume that I clicked on the “Submit Message” link on the homepage. In this example, my username is going to be <strong>“barbielover3000”</strong>. Here is what I will submit:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/6a59daad-4dc5-4e8d-b7c4-041673ca5b03-1-0208807f-e7e6-441b-80d2-c83cc65cfd29.png" class="img-fluid figure-img"></p>
+<figcaption>Screenshot 2024-02-14 at 6.38.02 PM.png</figcaption>
+</figure>
+</div>
+<p>(Note that my URL contains the ending “/submit”, which is exactly how we defined the function that renders the submit.html file!)</p>
+<p>Now that I’ve submitted, we see how my username is used to thank me for my submission. Recall that we passed this information in to the submit.html template!</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/52d55901-4ee2-49e1-8a96-33666af33827-1-1b0c117e-b132-4b6e-8fbd-5ef426dd03b0.png" class="img-fluid figure-img"></p>
+<figcaption>Screenshot 2024-02-14 at 6.39.18 PM.png</figcaption>
+</figure>
+</div>
+<p>Now, let’s click “View Messages” and see if we can see the message I submitted.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/6ce8ca97-4ee1-43e5-bbf7-fb7488f1c79c-1-7542d936-7d5b-485b-a6e5-3aeac5295c20.png" class="img-fluid figure-img"></p>
+<figcaption>Screenshot 2024-02-14 at 6.39.34 PM.png</figcaption>
+</figure>
+</div>
+<p>There it is! Wow, I didn’t know there were so many Anika Misra’s. What a cool name.</p>
+</section>
+<section id="section-4-summary-and-takeaways" class="level1">
+<h1>Section 4: Summary and takeaways</h1>
+<p>In this blog post, we learned how to make a simple webapp that acts as a message bank. We created an application script file that contained 6 different functions: 3 for the different pages we wanted to render, and 3 more for the functions that were used when we rendered these pages. We experimented with both the ‘POST’ and ‘GET’ methods of HTTP requests and data.</p>
+<p>Want to know how I made this website so pink and beautiful? I have attached my “style.css” file at the very end. Now, you can make your own message bank using Python and Flask! Happy coding.</p>
+<section id="style.css" class="level3">
+<h3 class="anchored" data-anchor-id="style.css">style.css</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/d34f7c77-f367-46d5-ad6b-70e6b82bebf9-1-10b5bbfb-772b-40a7-b3cd-f28197510274.png" class="img-fluid figure-img"></p>
+<figcaption>Screenshot 2024-02-14 at 6.57.32 PM.png</figcaption>
+</figure>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      return note.innerHTML;
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
