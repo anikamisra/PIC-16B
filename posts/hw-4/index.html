@@ -547,7 +547,13 @@ def advance_time_jax(u, epsilon):
 </section>
 <section id="part-5-summary-and-takeaways" class="level1">
 <h1>Part 5: Summary and Takeaways</h1>
-<p>In this blog post, we experiemented with different ways to simulate 2d heat diffusion in python. We tried matrix-vector multiplication, “jit-ed” matrix-vector multiplication with sparse matrices, direct numpy computation, and then direct, “jit-ed”, jax computation. Each successive method was faster than the previous one.</p>
+<p>In this blog post, we experiemented with different ways to simulate 2d heat diffusion in python. We tried matrix-vector multiplication, “jit-ed” matrix-vector multiplication with sparse matrices, direct numpy computation, and then direct, “jit-ed”, jax computation. Each successive method was faster than the previous one. Here is how they compare:</p>
+<ol type="1">
+<li><strong>advance_time_matvecmul</strong> Time was 168 seconds when using the non “jit-ed” version and a dense finite difference matrix.</li>
+<li><strong>advance_time_matvecmul “jit-ed”</strong>: Time was 0.75 seconds (230x faster than Part 1) when using the “jit-ed” version of the function and a sparse finite difference matrix.</li>
+<li><strong>advance_time_numpy</strong>: Time was 0.22 seconds (3x faster than Part 2) when utilizing numpy operations directly on the grid as opposed to matrix-vector multiplication.</li>
+<li><strong>advance_time_jax</strong>: Time was 0.12 seconds (2x faster than Part 4) when utilizing the “jit-ed” version of the function and using jax.numpy operations directly on the grid.</li>
+</ol>
 <p>The main takeaway for today is that JAX is FAST, but even though it is fast, its matrix-vector multiplication is not always faster than numpy’s direct computation.</p>
 
 
