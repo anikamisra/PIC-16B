@@ -6,10 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Anika Misra">
-<meta name="dcterms.date" content="2024-03-22">
 
-<title>myblog - How to create Chordy, a website that generates clean karaoke background tracks</title>
+<title>myblog - Karaoke Party At Home!!</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -152,30 +150,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">How to create Chordy, a website that generates clean karaoke background tracks</h1>
-                                <div class="quarto-categories">
-                <div class="quarto-category">week 10</div>
-                <div class="quarto-category">final</div>
-              </div>
-                  </div>
+      <h1 class="title">Karaoke Party At Home!!</h1>
+                      </div>
   </div>
     
   
   <div class="quarto-title-meta">
 
-      <div>
-      <div class="quarto-title-meta-heading">Author</div>
-      <div class="quarto-title-meta-contents">
-               <p>Anika Misra </p>
-            </div>
-    </div>
       
-      <div>
-      <div class="quarto-title-meta-heading">Published</div>
-      <div class="quarto-title-meta-contents">
-        <p class="date">March 22, 2024</p>
-      </div>
-    </div>
     
       
     </div>
@@ -205,7 +187,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Let’s get started by first running the existing website on your local device.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="index_files/figure-html/cell-2-1-download.jpg" class="img-fluid figure-img"></p>
+<p><img src="index_files/figure-html/cell-1-1-download.jpg" class="img-fluid figure-img"></p>
 <figcaption>download.jpg</figcaption>
 </figure>
 </div>
@@ -235,7 +217,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Also note that though our scraper only takes in one input however, it is possible to modify the scraper to accept a list of urls as opposed to a single artist url, and then scrape from there.</p>
 <p>Finally, when scraping, make sure to obey the Robot.txt for every website. In this code, the default is set to “off”, but make sure to turn it back to “on” when you run the scraper. This setting is located in the “settings.py” file of the chord scraper.</p>
 <p>Here is how we built our scraper. First, we made sure to import all the necessary packages.</p>
-<div id="cell-9" class="cell" data-tags="[]" data-execution_count="15">
+<div id="cell-8" class="cell" data-tags="[]" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scrapy </span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> selenium <span class="im">import</span> webdriver</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> selenium.webdriver.firefox.options <span class="im">import</span> Options</span>
@@ -246,7 +228,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> inspect</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Now, let’s take a look at the actual scraper itself.</p>
-<div id="cell-11" class="cell" data-tags="[]" data-execution_count="24">
+<div id="cell-10" class="cell" data-tags="[]" data-execution_count="24">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> chordy_functions_package <span class="im">import</span> chord_spider</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(inspect.getsource(chord_spider.chord_scraper))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -358,7 +340,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ol>
 <p>Output: key: bar_number, value: (chord, bar_length)</p>
 <p>Once the chords have been yielded in the dictionary format, a csv file is created for that artist. For example, here is what the csv file looks like for Taylor Swift’s page:</p>
-<div id="cell-13" class="cell" data-tags="[]" data-execution_count="23">
+<div id="cell-12" class="cell" data-tags="[]" data-execution_count="23">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>filename <span class="op">=</span> <span class="st">"taylorswift.csv"</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(filename)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -434,7 +416,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="part-2-music-generating-function">Part 2: Music Generating Function</h2>
 <p>For our project, we really wanted to look outside the scope of this course and try something completely new. Our goal with this project was to create actual music in the form of audio files that users could listen and sing along to. In order to achieve this goal, we had to research other Python packages. Thanks to several different websites, most notably an article on Medium.com by Steve Hiehn: https://medium.com/<span class="citation" data-cites="stevehiehn/how-to-generate-music-with-python-the-basics-62e8ea9b99a5">@stevehiehn/how-to-generate-music-with-python-the-basics-62e8ea9b99a5</span>, we were able to create the function to generate music.</p>
 <p>The first package we used was <strong>MIDIUtil</strong>. This specific allowed us to create an audiofile using the notes and chords we obtained in our data set. The next two packages we used helped our system understand different music terms and what they mean. These two functions are called <strong>mingus.core</strong> and <strong>pychord</strong>. These packages allow us to use note and chord names in our code and they will relate to the correct idea in music. We also continued to use Pandas to extract different elements within our dataset.</p>
-<div id="cell-21" class="cell" data-tags="[]" data-execution_count="30">
+<div id="cell-20" class="cell" data-tags="[]" data-execution_count="30">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#importing all of the necessary packages</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> midiutil <span class="im">import</span> MIDIFile</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> mingus.core <span class="im">import</span> chords</span>
@@ -444,7 +426,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>After downloading the necessary packages and ensuring we had the necessary data, we needed clean and reorganize our chord data. At this time, all of our chords were organized in different dictionaries. Using Pandas, we were able to pull out the chord names (in the form of strings) and organize them into a list. We then organized our elements of the list so they were in a form that Mingus.core and Pychord would recognize. Once we had all of the chords, we used our packages to create a list of the corresponding notes.</p>
 <p>Next, we developed a function, thanks to Steve Hiehn’s guidance, that creates an audio file out of the list of notes with a given tempo and volume. Please see the code below. The function was able to identify the sound/octave that corresponds to each string containing the name of a note. Additionally, we need to account for notes that have varying names in order to prevent any errors. We did this by writing a short function that contained several “if” loops which would change the note names. At the end of the code cell, there are a few more set values that may cary in between songs that allow for changes to the tempo, volume, and more.</p>
-<div id="cell-23" class="cell" data-tags="[]" data-execution_count="39">
+<div id="cell-22" class="cell" data-tags="[]" data-execution_count="39">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> chordy_functions_package <span class="im">import</span> app</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(inspect.getsource(app.musicpackage))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -613,6 +595,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Finally, used the MIDIUtil package to create our audio file based on the list of notes and octaves that follows the given interger values for track, tempo, and time. For users on a Mac system, the output file will download to their device in the form of a mid file that can be played in the app “Garage Band”. For Windows system users, the output file will download into the file app of the device and can be played directly from there as a mid file. You can see this last part in the last lines of the musicpackage() function above.</p>
 <p>This series of functions required each of us to gather a basic understanding of music theory and different files types in addition to the appilcations of Python methods we learned in class. Even though there was a lot of new content that we needed to learn on our own, we still were able to gather great experience with data cleaning. We implemented our understanding of Pandas and pulled data directly from our data frame. We worked to change string names and used a lot of trial and error to identify which formats worked best for the packages we were using to make the music. Additionally, we reorganized our data so that we could take elements of the dictionary we received from our scraper and turn it into a list with only the necessary strings. Although this process took a lot of different approaches and constant changes, we successfully created audio files that match some of our favorite hit songs.</p>
+<p>For example, here is what the original CSV notes for “Don’t start now” by Dua Lipa looked like before we ran our music package:</p>
+<div id="cell-25" class="cell" data-tags="[]" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">"dualipa.csv"</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>row1 <span class="op">=</span> df.iloc[<span class="dv">1</span>]</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(row1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>song_name                                                Houdini
+song_url       https://chordify.net/chords/dua-lipa-songs/hou...
+song_chords    {'0': ('N', '4'), '1': ('N', '4'), '2': ('N', ...
+Name: 1, dtype: object</code></pre>
+</div>
+</div>
+<p>And here is what that same song looks like translated as an audio file into Garageband:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/cell-27-1-17987da3-5b2f-4300-89bb-b3ae5c859a58.png" class="img-fluid figure-img"></p>
+<figcaption>Screenshot 2024-03-22 at 8.01.22 PM.png</figcaption>
+</figure>
+</div>
 <p>Now that we are able to create audiofiles and link to the data that our webscraper collected, we are ready to organize and present it all in flask!!</p>
 </section>
 <section id="part-3-flask-and-webapp" class="level2">
@@ -622,9 +624,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>After completing these first steps, our users will be directed to our app home page. From here, they will have the option to pick from one of our amazing Top Ten artists to see a list of tracks that we offer for some fun sing-alongs.</p>
 <p>Finally, once an artist is selected, the user will input a song and then be redircted to the download. In the event that our user ask for a song that does not exist, we have equipped our webapp to output the appropriate error message.</p>
 <p>Included below is the code contained in our app.py file that was used to create our site.</p>
-<div id="cell-27" class="cell" data-tags="[]" data-execution_count="38">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> chordy_functions_package <span class="im">import</span> app</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(inspect.getsource(app))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-30" class="cell" data-tags="[]" data-execution_count="38">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> chordy_functions_package <span class="im">import</span> app</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(inspect.getsource(app))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>from flask import Flask, render_template, request, redirect, url_for, session, send_file
 from flask import jsonify
@@ -972,13 +974,13 @@ if __name__ == '__main__':
 </div>
 <p>Each time when you run <code>flask run</code>, a connection is opened to our unique MongoDB database. The MongoDB atlas connects to regional servers to setup operations. When a user submits a session (that relates to user credentials computation), database computing is called in flask through the db.py helper function and class objects - at run time, we interact with the dynamic database to achieve user login, login sessions, and creating an account.</p>
 <p>On cloud.mongodb.com, this is how our MongoDB deployment and collection looks like in real time:</p>
-<div id="cell-29" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-03-22T16:22:22.905734Z&quot;,&quot;start_time&quot;:&quot;2024-03-22T16:22:22.872620Z&quot;}" data-jupyter="{&quot;outputs_hidden&quot;:false}" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> IPython.display <span class="im">import</span> Image</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>Image(filename<span class="op">=</span><span class="st">'/Users/athena/Desktop/hw6/mongodb.jpg'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-32" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-03-22T16:22:22.905734Z&quot;,&quot;start_time&quot;:&quot;2024-03-22T16:22:22.872620Z&quot;}" data-jupyter="{&quot;outputs_hidden&quot;:false}" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> IPython.display <span class="im">import</span> Image</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>Image(filename<span class="op">=</span><span class="st">'/Users/athena/Desktop/hw6/mongodb.jpg'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
 <div>
 <figure class="figure">
-<p><img src="index_files/figure-html/cell-8-output-1.jpeg" class="img-fluid figure-img"></p>
+<p><img src="index_files/figure-html/cell-9-output-1.jpeg" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -987,10 +989,11 @@ if __name__ == '__main__':
 <section id="conclusion" class="level2">
 <h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
 <p>In this blog post, you learned how to use the project tools behind Chordy. You learned how to run the website on your local device, along with how each of the main components of our website was created. In the future, you can easily import these functions using the chordy_functions_package from our Github repo. And, you can create your own version of Chordy by changing one of the three components in any way you please.</p>
+<p><strong>Ethical ramifications of the project</strong>: One of the ethical remarks of this project is copyright issues. Artists take a lot of time and pride in creating their songs, and though we are only creating simple chord progressions (which cannot be copyrighted), these chord progressions would not mean anything if the artist did not take the time to create this piece of musical art and take the time to make this song famous. Hence, when utilizing this website, make sure to only use it for personal use and not exploit the song artist’s art.</p>
 <p>Happy singing!</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="index_files/figure-html/cell-31-1-664b9f73-52e7-47db-89de-bbaaada26ea1.jpeg" class="img-fluid figure-img"></p>
+<p><img src="index_files/figure-html/cell-34-1-664b9f73-52e7-47db-89de-bbaaada26ea1.jpeg" class="img-fluid figure-img"></p>
 <figcaption>dualipa.jpeg</figcaption>
 </figure>
 </div>
