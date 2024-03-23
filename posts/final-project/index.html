@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.541">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Anika Misra">
+<meta name="dcterms.date" content="2024-03-22">
+
+<title>myblog - How to create Chordy, a website that generates clean karaoke background tracks</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">myblog</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">How to create Chordy, a website that generates clean karaoke background tracks</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">week 10</div>
+                <div class="quarto-category">final</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Anika Misra </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">March 22, 2024</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<section id="karaoke-party-at-home" class="level1">
+<h1>Karaoke Party At Home!!</h1>
+<section id="pic-16b-final-project" class="level2">
+<h2 class="anchored" data-anchor-id="pic-16b-final-project">PIC 16B Final Project</h2>
+<section id="by-isabella-woulfe-anika-misra-and-athena-mo" class="level3">
+<h3 class="anchored" data-anchor-id="by-isabella-woulfe-anika-misra-and-athena-mo">By Isabella Woulfe, Anika Misra, and Athena Mo</h3>
+<p>Our project aims to address the problem of not finding clean karaoke background tracks with simply chords for songs by Top Ten Artists. Oftentimes, people want clean instrumental versions of songs that do not have additional background vocals, additional instruments, or have required ads that you need to watch before getting access to the karaoke backtrack. Oftentimes, musicians want to layer on their own instruments and their own vocals, and quickly need the chord sounds for the song—nothing else.</p>
+<p>In general our project was divided into three main segments: gathering data using webscraping, creating music, and displaying on a a web app. Through this we successfully completed the following components: - Web scraping - Working with large and messy data - Building a dynamic website - Using packages not introduced in PIC 16A or PIC 16B</p>
+<p>In this blog post, we will demonstrate how to use our project tools. We will begin by showing you how to run the website on your local device. Then, our next three sections will explain how to build the main components of our website: 1. Webscraper 2. Music processer 3. Webapp</p>
+<p>In this blog, we will explain how we built our project from scratch. By following along with this tutorial, you will learn the function behind each piece of the website, so that you can also customize your own Chordy website by changing the music processer, modifying the webscraper, or playing around with the format of the Webapp.</p>
+<p>Let’s get started by first running the existing website on your local device.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/cell-2-1-download.jpg" class="img-fluid figure-img"></p>
+<figcaption>download.jpg</figcaption>
+</figure>
+</div>
+</section>
+</section>
+<section id="part-0-setup-and-how-to-run-website-on-your-local-device" class="level2">
+<h2 class="anchored" data-anchor-id="part-0-setup-and-how-to-run-website-on-your-local-device">Part 0: Setup and how to run website on your local device</h2>
+<p>First, we will explain how to run the website on your local device. Note that more detailed instructions on how to run the website are located in the README file for our repisitory: https://github.com/anikamisra/PIC16B-project/blob/main/README.md</p>
+<ol type="1">
+<li><p>First, clone the github repository into your local device created for this project, located here: https://github.com/anikamisra/PIC16B-project . Here is a tutorial on how to clone a git repo: https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository</p></li>
+<li><p>Next, make sure to pip install all the required packages. These include: <strong>flask, flask_cors, dotenv, midiutil, mingus, pandas, pychord, selenium, scrapy, pymongo</strong>, and any other non-updated packages, depending on your environment.</p></li>
+<li><p>Once you are in the PIC16B-project folder on your local device, add a “.env” file with the DB password. Here is where you can find the password needed: https://github.com/anikamisra/PIC16B-project/blob/main/README.md</p></li>
+<li><p>Navigate to the “chord_scraper” folder on your local device. Ensure that “app.py” exists in this folder. Then, run this line in your terminal:</p></li>
+</ol>
+<p>flask run</p>
+<p>And you should see something like this in your terminal:</p>
+<p>mongodb+srv://Chordy:0YnrLGO4d5dxjtSc@cluster0.pirmgae.mongodb.net/ Pinged your deployment. You successfully connected to MongoDB! * Debug mode: off WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead. * Running on http://127.0.0.1:5000 Press CTRL+C to quit</p>
+<p>By pasting “http://127.0.0.1:5000” into your favorite browser, you can access Chordy and download backtracks to any top 100 song of your choice!</p>
+<p>Also, note that all of the functions in our project are contained in the <strong>“chordy_functions_package” module</strong>. So, if you want to edit any of these functions, you can easily import this module into your code and edit from there.</p>
+<p>Now that we have explained how to run the website on your local device, let us dive in to how we actually created this project.</p>
+</section>
+<section id="part-1-our-webscraper" class="level2">
+<h2 class="anchored" data-anchor-id="part-1-our-webscraper">Part 1: Our Webscraper</h2>
+<p>Before we can start creating music, we need to gather the music data. We did this through webscraping. After researching, we decided to gather data from Chordify.net. Chordify is a platform that provides chords for thousands of songs, compatible with guitar, ukelele, piano, and more. From Chordify, we collected the chords of about 100 songs from the top artists in the US. We also gathered the bar lengths of each song, as well as the song titles. We stored our final data in a separate csv file for each artist, which provides for easier navigation in regards to the Webapp.</p>
+<p>Our scraper has two parts: 1. Parse the artist page and yield a song url 2. Parse song page and yield song chords in the form of a dictionary</p>
+<p>To implement our scraper, we used both Scrapy and Selenium. We learned how to use Scrapy in Homework 2, but adding Selenium allowed us more flexibility with the dynamic website style of Chordify.</p>
+<p>Also note that though our scraper only takes in one input however, it is possible to modify the scraper to accept a list of urls as opposed to a single artist url, and then scrape from there.</p>
+<p>Finally, when scraping, make sure to obey the Robot.txt for every website. In this code, the default is set to “off”, but make sure to turn it back to “on” when you run the scraper. This setting is located in the “settings.py” file of the chord scraper.</p>
+<p>Here is how we built our scraper. First, we made sure to import all the necessary packages.</p>
+<div id="cell-9" class="cell" data-tags="[]" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scrapy </span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> selenium <span class="im">import</span> webdriver</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> selenium.webdriver.firefox.options <span class="im">import</span> Options</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> selenium.webdriver.chrome.options <span class="im">import</span> Options <span class="im">as</span> ChromeOptions</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scrapy.selector <span class="im">import</span> Selector</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scrapy.http <span class="im">import</span> Request</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time   </span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> inspect</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now, let’s take a look at the actual scraper itself.</p>
+<div id="cell-11" class="cell" data-tags="[]" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> chordy_functions_package <span class="im">import</span> chord_spider</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(inspect.getsource(chord_spider.chord_scraper))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>class chord_scraper(scrapy.Spider): 
+    name = 'chord_scraper'
+    
+    def __init__(self, artistname, *args, **kwargs):
+        """
+        Initializer for chord_scraper. Inherits from scrapy.Spider class
+        """ 
+        super().__init__(*args, **kwargs)  
+        # format artist name properly 
+        artistname_formatted = ("-".join(artistname.split())).lower()
+        
+        # form url of artist page 
+        artist_page_url = "https://chordify.net/chords/"+artistname_formatted+"-songs"
+        self.start_urls = [artist_page_url]
+        
+        # firefox option: 
+        #options = Options()
+        #options.headless = True
+        #firefox_profile = webdriver.FirefoxProfile()
+        #firefox_profile.set_preference("browser.privatebrowsing.autostart", True)
+        #self.driver = webdriver.Firefox(options=options)
+        
+        # chrome option 
+        options = ChromeOptions()
+        options.add_argument("--incognito")
+        options.add_argument("--headless")
+
+        # set up webdriver with these options 
+        self.driver = webdriver.Chrome(options=options)
+    def parse(self, response):
+        """
+        Parses artist's page and returns url for each song. 
+        Calls the parse_song_url function for each song page url. 
+        """
+        
+        self.driver.get(response.url) 
+        # wait for page to load 
+        time.sleep(5)
+        html = self.driver.page_source
+        sel = Selector(text=html) 
+        # select the main html element containing all songs
+        main_div = sel.css('div.s1qyqb8i.g1aau9lx')
+        # iterate through each song and get the url for each song 
+        for link in sel.css('div.s1qyqb8i.g1aau9lx a::attr(href)'):
+            song_url = link.get()
+            base_url = "https://chordify.net" + song_url # hard-coded url is okay 
+            # call next scraper for the songs 
+            yield scrapy.Request(url = base_url, callback = self.parse_song_url)
+    def parse_song_url(self, response): 
+        """
+        Parses song page and yields dictionary of chords for each song. 
+        Input is the song page from the first parse page. 
+        Dictionary output contains bar number as key, and a tuple of (chord, bar length) for each value. 
+        """
+        self.driver.get(response.url)
+        # wait for page to load 
+        time.sleep(5)
+        html = self.driver.page_source
+        sel = Selector(text=html)
+        
+        # obtain song url 
+        song_url = response.url
+        # format song name by string slicing from url 
+        start = song_url.rfind("/")
+        end = len(song_url) - 7 
+        song_title = song_url[start+1:end]
+        # clean song name url 
+        song_title = (song_title.replace('-', ' ')).title()
+
+        # obtain chord elements for song 
+        div = sel.css('div.s4xyh0t &gt; div.chords')
+        # obtain bar length 
+        barlength = div.css('::attr(class)').re_first('barlength-(\d+)')
+        tags_with_i_value = div.css('[data-i]')
+        # create table of all results 
+        table = [{'i-value': tag.css('::attr(data-i)').get(), 'data-handle': tag.css('::attr(data-handle)').get(), 'barlength': barlength} for tag in tags_with_i_value]
+        # create dicionary output for each song by iterating through table 
+        dict_of_chords = dict()
+        for row in table: 
+            i_value = row['i-value']
+            chord = row['data-handle']
+            barlength = row['barlength']
+            dict_of_chords[i_value] = (chord, barlength) 
+        # yield the result as a dictionary
+        yield {
+            'song_name': song_title,
+            'song_url': song_url,
+            'song_chords': dict_of_chords
+            }
+
+    def closed(self, reason):
+        """
+        Closes the web driver. 
+        """
+        # close webdriver 
+        self.driver.quit()
+</code></pre>
+</div>
+</div>
+<p>As we can see, there are four functions defined in the web scraper.</p>
+<ol type="1">
+<li><strong>Initializer</strong>: This function initializes the webscraper. It takes in the terminal input and builds the url for the artist page. It also sets up the options for our scraper. Note that in our scraper, we used Chrome, but Firefox options are commented out for your convenience, too. The terminal input is the artist page formatted in Chordify.net format. For example, on Dua Lipa’s page, the url is: https://chordify.net/chords/dua-lipa-songs Hence, the input for this page would be “dua-lipa”. The initializer then forms the rest of the URL through simple hardcoding, since the format for each artist page is the same, and calls the first parse function.</li>
+<li><strong>Parse</strong>: This function starts on the artist page and parses through the songs of each artist. First, it waits for the page to load fully. Then, it collects the url of eachs song and passes the result to the parse_song_url function.</li>
+<li><strong>parse_song_url</strong>: This function starts on a single song page. It also waits for the page to load. It also obtains the song name by string slicing and cleaning of the song url, since the song url contains the song name. Then, it colleccts the chords for the song. It creates a dictionary value with the <strong>key</strong> as the bar number, and the value is a <strong>tuple</strong> containing the chord for that bar number, and bar length as the second argument.</li>
+<li><strong>close</strong>: This function closes the webdriver that we set up for the scraper and ends the Webdriver session.</li>
+</ol>
+<p>Output: key: bar_number, value: (chord, bar_length)</p>
+<p>Once the chords have been yielded in the dictionary format, a csv file is created for that artist. For example, here is what the csv file looks like for Taylor Swift’s page:</p>
+<div id="cell-13" class="cell" data-tags="[]" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>filename <span class="op">=</span> <span class="st">"taylorswift.csv"</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(filename)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="23">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">song_name</th>
+<th data-quarto-table-cell-role="th">song_url</th>
+<th data-quarto-table-cell-role="th">song_chords</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>Look What You Made Me Do 2</td>
+<td>https://chordify.net/chords/taylor-swift-songs...</td>
+<td>{'0': ('N', '4'), '1': ('N', '4'), '2': ('N', ...</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>Opening</td>
+<td>https://chordify.net/chords/taylor-swift-songs...</td>
+<td>{'0': ('N', '4'), '1': ('N', '4'), '2': ('N', ...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>I Knew You Were Trouble 2</td>
+<td>https://chordify.net/chords/taylor-swift-songs...</td>
+<td>{'0': ('N', '4'), '1': ('N', '4'), '2': ('N', ...</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>Willow</td>
+<td>https://chordify.net/chords/taylor-swift-songs...</td>
+<td>{'0': ('N', '4'), '1': ('E:min', '4'), '2': ('...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>August</td>
+<td>https://chordify.net/chords/taylor-swift-songs...</td>
+<td>{'0': ('N', '4'), '1': ('N', '4'), '2': ('N', ...</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>But what do we put in the terminal? First, make sure you have cloned the github repisitory. Then, navigate to the chord_scraper folder that contains “spiders”. After running</p>
+<p>ls</p>
+<p>In your terminal, if you see “settings.py” in the output, you are in the right folder. Then, if you want to scrape the top 10 artists’ pages, you would run the following lines in your terminal.</p>
+<ul>
+<li>scrapy crawl chord_scraper -o results.csv -a artistname=dua-lipa</li>
+<li>scrapy crawl chord_scraper -o taylorswift.csv -a artistname=taylor-swift</li>
+<li>scrapy crawl chord_scraper -o badbunny.csv -a artistname=bad-bunny</li>
+<li>scrapy crawl chord_scraper -o theweeknd.csv -a artistname=the-weeknd</li>
+<li>scrapy crawl chord_scraper -o drake.csv -a artistname=drake</li>
+<li>scrapy crawl chord_scraper -o travisscott.csv -a artistname=travi-scott</li>
+<li>scrapy crawl chord_scraper -o beyonce.csv -a artistname=beyonce</li>
+<li>scrapy crawl chord_scraper -o michaeljackson.csv -a artistname=michael-jackson</li>
+<li>scrapy crawl chord_scraper -o ladygaga.csv -a artistname=lady-gaga</li>
+<li>scrapy crawl chord_scraper -o arianagrande.csv -a artistname=ariana-grande</li>
+</ul>
+<p>More ideas: In the future, you can play around with what we have built. For example, you can scrape <strong>other artists</strong> besides just the top 10. In the “artistname” argument in the terminal, just make sure to input the properly formatted name of the artist you would like to see. Furthermore, for faster scraping, you can also edit the initializer of the webscraper to take in a <strong>list of urls</strong> as opposed to just a single url at a time. However, we did not find this necessary as we were only scraping 10 artists.</p>
+<p>Now that we have successfully created our csv files, we can extract this data and use it in our next step to create some great tracks!</p>
+</section>
+<section id="part-2-music-generating-function" class="level2">
+<h2 class="anchored" data-anchor-id="part-2-music-generating-function">Part 2: Music Generating Function</h2>
+<p>For our project, we really wanted to look outside the scope of this course and try something completely new. Our goal with this project was to create actual music in the form of audio files that users could listen and sing along to. In order to achieve this goal, we had to research other Python packages. Thanks to several different websites, most notably an article on Medium.com by Steve Hiehn: https://medium.com/<span class="citation" data-cites="stevehiehn/how-to-generate-music-with-python-the-basics-62e8ea9b99a5">@stevehiehn/how-to-generate-music-with-python-the-basics-62e8ea9b99a5</span>, we were able to create the function to generate music.</p>
+<p>The first package we used was <strong>MIDIUtil</strong>. This specific allowed us to create an audiofile using the notes and chords we obtained in our data set. The next two packages we used helped our system understand different music terms and what they mean. These two functions are called <strong>mingus.core</strong> and <strong>pychord</strong>. These packages allow us to use note and chord names in our code and they will relate to the correct idea in music. We also continued to use Pandas to extract different elements within our dataset.</p>
+<div id="cell-21" class="cell" data-tags="[]" data-execution_count="30">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#importing all of the necessary packages</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> midiutil <span class="im">import</span> MIDIFile</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> mingus.core <span class="im">import</span> chords</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> ast</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pychord <span class="im">import</span> Chord</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>After downloading the necessary packages and ensuring we had the necessary data, we needed clean and reorganize our chord data. At this time, all of our chords were organized in different dictionaries. Using Pandas, we were able to pull out the chord names (in the form of strings) and organize them into a list. We then organized our elements of the list so they were in a form that Mingus.core and Pychord would recognize. Once we had all of the chords, we used our packages to create a list of the corresponding notes.</p>
+<p>Next, we developed a function, thanks to Steve Hiehn’s guidance, that creates an audio file out of the list of notes with a given tempo and volume. Please see the code below. The function was able to identify the sound/octave that corresponds to each string containing the name of a note. Additionally, we need to account for notes that have varying names in order to prevent any errors. We did this by writing a short function that contained several “if” loops which would change the note names. At the end of the code cell, there are a few more set values that may cary in between songs that allow for changes to the tempo, volume, and more.</p>
+<div id="cell-23" class="cell" data-tags="[]" data-execution_count="39">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> chordy_functions_package <span class="im">import</span> app</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(inspect.getsource(app.musicpackage))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>def musicpackage():
+    """
+    Main function for processing music data.
+    Reads chords data from a CSV file, converts chords to notes,
+    and generates a MIDI file based on the chord progression.
+    """
+
+    NOTES = ['C', 'C#', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'Ab', 'A', 'Bb', 'B']
+    OCTAVES = list(range(11))
+    NOTES_IN_OCTAVE = len(NOTES)
+
+    errors = {
+        'There was an error.'
+    }
+    def read_csvpath_from_file():
+        """
+        Reads from the config.txt file.
+        Returns the content of line named "cs_path"
+        """
+        with open('config.txt', 'r') as file:
+            for line in file:
+                if line.startswith('csv_path'):
+                    variable_value = line.split('=')[1].strip().strip('"')
+                    return variable_value
+        return None
+
+    def read_index_from_file():
+        """
+         Reads from the config.txt file.
+         Returns the content of line named "user_song"
+         """
+        with open('config.txt', 'r') as file:
+            for line in file:
+                if line.startswith('user_song'):
+                    variable_value = line.split('=')[1].strip().strip('"')
+                    return variable_value
+        return None
+    
+    # take in csv file created by webscraper 
+    csvpath = read_csvpath_from_file()
+    df = pd.read_csv(csvpath)
+    df.head()
+    df = pd.read_csv(csvpath)
+    index = read_index_from_file()
+    # obtain index, song name, and chords 
+    index = int(index)
+    song_name = df.iloc[index, 0]
+    chords_string = df.loc[df['song_name'] == song_name, 'song_chords'].values[0]
+
+    # turn chords into dictionary 
+    chords = ast.literal_eval(chords_string)
+    extracted_strings = []
+    # iterate through dictionary values
+    for key, value in chords.items():
+        extracted_strings.append(value[0])  # Append the first element of the tuple
+    # get barlength
+    first_item = list(chords.keys())[0]
+    bar_length = chords[first_item][1]
+
+    # clean up webscraper code
+    original_list = extracted_strings
+    # Remove semicolons from each string
+    cleaned_list = [s.replace(':', '') for s in original_list]
+
+    def chords_to_notes(chord_list):
+        """
+        Given a list of chord names, returns a list of corresponding notes.
+        """
+        notes_list = []
+        for chord_name in chord_list:
+            if chord_name == 'N':
+                # Handle the special case of a rest
+                notes_list.append('')
+            else:
+                try:
+                    chord = Chord(chord_name)
+                    notes = chord.components()
+                    # filter out numeric indices (only keep strings)
+                    notes = [note for note in notes if isinstance(note, str)]
+                    notes_list.extend(notes)
+                except ValueError:
+                    # for handling invalid chord names
+                    pass
+        return notes_list
+
+    chord_names = cleaned_list
+    resulting_notes = chords_to_notes(chord_names)
+
+    def swap_accidentals(note):
+        """
+        Function to swap accidentals and avoid errors / redundant notes. 
+        In music theory, this refers to two notes with the same name. 
+        """
+        if note == 'Db':
+            return 'C#'
+        if note == 'D#':
+            return 'Eb'
+        if note == 'E#':
+            return 'F'
+        if note == 'Gb':
+            return 'F#'
+        if note == 'G#':
+            return 'Ab'
+        if note == 'A#':
+            return 'Bb'
+        if note == 'B#':
+            return 'C'
+
+        return note
+
+    def note_to_number(note: str, octave: int) -&gt; int:
+        """
+        Takes in note in string format, name value. 
+        Returns numeric value of each note. 
+        """
+        note = swap_accidentals(note)
+        assert note in NOTES, errors['notes']
+        assert octave in OCTAVES, errors['notes']
+
+        note = NOTES.index(note)
+        note += (NOTES_IN_OCTAVE * octave)
+
+        assert 0 &lt;= note &lt;= 127, errors['notes']
+
+        return note
+
+    chord_progression = resulting_notes
+    i = 0
+    # remove all spaces from chord progression
+    chord_progression = [chord for chord in chord_progression if chord.strip() != '']
+    #print("chord progresion", chord_progression) # for debugging 
+    array_of_notes = []
+    for note in chord_progression:
+        array_of_notes.append(note)
+    print("array of notes", array_of_notes)
+    #print(type(chord_progression[0])) # for debugging 
+
+    # create array of all note numbers 
+    array_of_note_numbers = []
+    for note in array_of_notes:
+        OCTAVE = 4
+        array_of_note_numbers.append(note_to_number(note, OCTAVE))
+    
+    # set parameters for music file 
+    track = 0
+    channel = 0
+    time = 0  # In beats
+    duration = 1  # In beats
+    tempo = 120 * int(bar_length)  # In BPM
+    volume = 100  # 0-127, as per the MIDI standard
+
+    MyMIDI = MIDIFile(1)  # One track, defaults to format 1 (tempo track is created
+    # automatically)
+    MyMIDI.addTempo(track, time, tempo)
+
+    for i, pitch in enumerate(array_of_note_numbers):
+        MyMIDI.addNote(track, channel, pitch, time + i, duration, volume)
+
+    with open("chord_scraper/yourmusic.mid", "wb") as output_file:
+        MyMIDI.writeFile(output_file)
+</code></pre>
+</div>
+</div>
+<p>Finally, used the MIDIUtil package to create our audio file based on the list of notes and octaves that follows the given interger values for track, tempo, and time. For users on a Mac system, the output file will download to their device in the form of a mid file that can be played in the app “Garage Band”. For Windows system users, the output file will download into the file app of the device and can be played directly from there as a mid file. You can see this last part in the last lines of the musicpackage() function above.</p>
+<p>This series of functions required each of us to gather a basic understanding of music theory and different files types in addition to the appilcations of Python methods we learned in class. Even though there was a lot of new content that we needed to learn on our own, we still were able to gather great experience with data cleaning. We implemented our understanding of Pandas and pulled data directly from our data frame. We worked to change string names and used a lot of trial and error to identify which formats worked best for the packages we were using to make the music. Additionally, we reorganized our data so that we could take elements of the dictionary we received from our scraper and turn it into a list with only the necessary strings. Although this process took a lot of different approaches and constant changes, we successfully created audio files that match some of our favorite hit songs.</p>
+<p>Now that we are able to create audiofiles and link to the data that our webscraper collected, we are ready to organize and present it all in flask!!</p>
+</section>
+<section id="part-3-flask-and-webapp" class="level2">
+<h2 class="anchored" data-anchor-id="part-3-flask-and-webapp">Part 3: Flask and Webapp</h2>
+<p>Finally, we will combine the elements of Part 1 and Part 2 into our webapp. Our dynamic website contains several different pages that users can interact with.</p>
+<p>First, the user is presented with a login page. They will have an option to create a username and password. This adds an extra level of security to our website but also makes it even more personalized for users to have their own individual account on our site.</p>
+<p>After completing these first steps, our users will be directed to our app home page. From here, they will have the option to pick from one of our amazing Top Ten artists to see a list of tracks that we offer for some fun sing-alongs.</p>
+<p>Finally, once an artist is selected, the user will input a song and then be redircted to the download. In the event that our user ask for a song that does not exist, we have equipped our webapp to output the appropriate error message.</p>
+<p>Included below is the code contained in our app.py file that was used to create our site.</p>
+<div id="cell-27" class="cell" data-tags="[]" data-execution_count="38">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> chordy_functions_package <span class="im">import</span> app</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(inspect.getsource(app))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>from flask import Flask, render_template, request, redirect, url_for, session, send_file
+from flask import jsonify
+from flask_cors import CORS
+import subprocess
+import os
+import difflib
+from dotenv import load_dotenv
+from db import Database, User
+from midiutil import MIDIFile
+from mingus.core import chords
+import ast
+import pandas as pd
+from pychord import Chord
+
+app = Flask(__name__)
+app.secret_key = os.urandom(24)
+
+CORS(app, supports_credentials=True)
+load_dotenv(".env")
+database = Database(os.getenv("DB_PSWD"))
+
+def musicpackage():
+    """
+    Main function for processing music data.
+    Reads chords data from a CSV file, converts chords to notes,
+    and generates a MIDI file based on the chord progression.
+    """
+
+    NOTES = ['C', 'C#', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'Ab', 'A', 'Bb', 'B']
+    OCTAVES = list(range(11))
+    NOTES_IN_OCTAVE = len(NOTES)
+
+    errors = {
+        'There was an error.'
+    }
+    def read_csvpath_from_file():
+        """
+        Reads from the config.txt file.
+        Returns the content of line named "cs_path"
+        """
+        with open('config.txt', 'r') as file:
+            for line in file:
+                if line.startswith('csv_path'):
+                    variable_value = line.split('=')[1].strip().strip('"')
+                    return variable_value
+        return None
+
+    def read_index_from_file():
+        """
+         Reads from the config.txt file.
+         Returns the content of line named "user_song"
+         """
+        with open('config.txt', 'r') as file:
+            for line in file:
+                if line.startswith('user_song'):
+                    variable_value = line.split('=')[1].strip().strip('"')
+                    return variable_value
+        return None
+    
+    # take in csv file created by webscraper 
+    csvpath = read_csvpath_from_file()
+    df = pd.read_csv(csvpath)
+    df.head()
+    df = pd.read_csv(csvpath)
+    index = read_index_from_file()
+    # obtain index, song name, and chords 
+    index = int(index)
+    song_name = df.iloc[index, 0]
+    chords_string = df.loc[df['song_name'] == song_name, 'song_chords'].values[0]
+
+    # turn chords into dictionary 
+    chords = ast.literal_eval(chords_string)
+    extracted_strings = []
+    # iterate through dictionary values
+    for key, value in chords.items():
+        extracted_strings.append(value[0])  # Append the first element of the tuple
+    # get barlength
+    first_item = list(chords.keys())[0]
+    bar_length = chords[first_item][1]
+
+    # clean up webscraper code
+    original_list = extracted_strings
+    # Remove semicolons from each string
+    cleaned_list = [s.replace(':', '') for s in original_list]
+
+    def chords_to_notes(chord_list):
+        """
+        Given a list of chord names, returns a list of corresponding notes.
+        """
+        notes_list = []
+        for chord_name in chord_list:
+            if chord_name == 'N':
+                # Handle the special case of a rest
+                notes_list.append('')
+            else:
+                try:
+                    chord = Chord(chord_name)
+                    notes = chord.components()
+                    # filter out numeric indices (only keep strings)
+                    notes = [note for note in notes if isinstance(note, str)]
+                    notes_list.extend(notes)
+                except ValueError:
+                    # for handling invalid chord names
+                    pass
+        return notes_list
+
+    chord_names = cleaned_list
+    resulting_notes = chords_to_notes(chord_names)
+
+    def swap_accidentals(note):
+        """
+        Function to swap accidentals and avoid errors / redundant notes. 
+        In music theory, this refers to two notes with the same name. 
+        """
+        if note == 'Db':
+            return 'C#'
+        if note == 'D#':
+            return 'Eb'
+        if note == 'E#':
+            return 'F'
+        if note == 'Gb':
+            return 'F#'
+        if note == 'G#':
+            return 'Ab'
+        if note == 'A#':
+            return 'Bb'
+        if note == 'B#':
+            return 'C'
+
+        return note
+
+    def note_to_number(note: str, octave: int) -&gt; int:
+        """
+        Takes in note in string format, name value. 
+        Returns numeric value of each note. 
+        """
+        note = swap_accidentals(note)
+        assert note in NOTES, errors['notes']
+        assert octave in OCTAVES, errors['notes']
+
+        note = NOTES.index(note)
+        note += (NOTES_IN_OCTAVE * octave)
+
+        assert 0 &lt;= note &lt;= 127, errors['notes']
+
+        return note
+
+    chord_progression = resulting_notes
+    i = 0
+    # remove all spaces from chord progression
+    chord_progression = [chord for chord in chord_progression if chord.strip() != '']
+    #print("chord progresion", chord_progression) # for debugging 
+    array_of_notes = []
+    for note in chord_progression:
+        array_of_notes.append(note)
+    print("array of notes", array_of_notes)
+    #print(type(chord_progression[0])) # for debugging 
+
+    # create array of all note numbers 
+    array_of_note_numbers = []
+    for note in array_of_notes:
+        OCTAVE = 4
+        array_of_note_numbers.append(note_to_number(note, OCTAVE))
+    
+    # set parameters for music file 
+    track = 0
+    channel = 0
+    time = 0  # In beats
+    duration = 1  # In beats
+    tempo = 120 * int(bar_length)  # In BPM
+    volume = 100  # 0-127, as per the MIDI standard
+
+    MyMIDI = MIDIFile(1)  # One track, defaults to format 1 (tempo track is created
+    # automatically)
+    MyMIDI.addTempo(track, time, tempo)
+
+    for i, pitch in enumerate(array_of_note_numbers):
+        MyMIDI.addNote(track, channel, pitch, time + i, duration, volume)
+
+    with open("chord_scraper/yourmusic.mid", "wb") as output_file:
+        MyMIDI.writeFile(output_file)
+
+def write_variable_to_file(new_value):
+    """
+       Writes a new value to the 'csv_path' variable in the config file.
+    """
+    with open('config.txt', 'r+') as file:
+        lines = file.readlines()
+        file.seek(0)
+        for line in lines:
+            if line.startswith('csv_path'):
+                file.write(f'csv_path = "{new_value}"\n')
+            else:
+                file.write(line)
+        file.truncate()
+
+def write_variable_to_file2(new_value):
+    """
+    Writes a new value to the 'user_song' variable in the config file.
+    """
+    with open('config.txt', 'r+') as file:
+        lines = file.readlines()
+        file.seek(0)
+        for line in lines:
+            if line.startswith('user_song'):
+                file.write(f'user_song = "{new_value}"\n')
+            else:
+                file.write(line)
+        file.truncate()
+
+def read_csvpath_from_file():
+    """
+    Reads the 'csv_path' variable value from the config file.
+    Returns None if the variable is not found.
+    """
+    with open('config.txt', 'r') as file:
+        for line in file:
+            if line.startswith('csv_path'):
+                variable_value = line.split('=')[1].strip().strip('"')
+                return variable_value
+    return None
+
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    """
+    Renders the index page.
+    If the user is logged in, displays the username.
+    Redirects to the login page if the user is not logged in.
+    """
+    if 'username' in session:
+        return render_template('index.html', username=session['username'])
+    else:
+        return redirect(url_for('login'))
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    """
+    Handles the login functionality.
+    Validates user credentials and sets session username if valid.
+    Renders the login page with an error message if credentials are invalid.
+    """
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        if database.verify_user(username, password):
+            session['username'] = username
+            return redirect(url_for('index'))
+        else:
+            return render_template('login.html', error="Invalid username or password.")
+    return render_template('login.html')
+
+@app.route('/createAccount', methods=['GET', 'POST'])
+def create_account():
+    """
+    Handles the creation of new user accounts.
+    Adds a new user to the database if the username is unique.
+    Renders the create account page with an error message if the username already exists.
+    """
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        if database.add_user(User(username, password)):
+            session['username'] = username
+            return redirect(url_for('index'))
+        else:
+            return render_template('create_account.html', error="Username already exists.")
+    return render_template('create_account.html')
+
+@app.route('/logout')
+def logout():
+    """
+    Logs out the current user by removing the username from the session.
+    Redirects to the index page after logout.
+    """
+    session.pop('username', None)
+    return redirect(url_for('index'))
+
+@app.route('/SearchSong', methods=['GET', 'POST'])
+def SearchSong():
+    """
+    Handles the search song functionality.
+    Retrieves the URL entered by the user and writes it to the config file.
+    Renders the search song page.
+    """
+    if request.method == 'POST':
+        url = request.form['url']
+        write_variable_to_file2(url)
+    return render_template('SearchSong.html')
+
+@app.route('/download')
+def download_file():
+    """
+    Downloads the generated MIDI file to the user's device.
+    """
+    musicpackage()
+    # Provide the path to the file you want to serve
+    file_path = 'chord_scraper/yourmusic.mid'
+    # Send the file to the user for download
+    return send_file(file_path)
+
+
+@app.route('/SearchWithArtist', methods=['GET', 'POST'])
+def SearchWithArtist():
+    """
+    Handles the search with artist functionality.
+    Retrieves the artist name entered by the user.
+    Searches for a matching CSV file based on the artist's name.
+    If found, displays the matching songs.
+    If not found, suggests similar artists or displays an error message.
+    Renders the search with artist page.
+    """
+    if request.method == 'POST':
+        # Get the artist name from the form and format it properly
+        artist = request.form['artist'].lower().replace(' ', '')
+        # Search for the CSV file with the matching artist name
+        csv_file_path = os.path.join(os.getcwd(), 'chord_scraper', artist + '.csv')
+        if os.path.exists(csv_file_path):
+            write_variable_to_file(csv_file_path)
+            # Read the CSV file into a DataFrame
+            df = pd.read_csv(csv_file_path)
+            new_df = df.iloc[:, :1].copy()
+            result_data = []
+            for index, row in new_df.iterrows():
+                result_data.append(row.tolist())
+        else:
+            # Find the first artist whose name starts with the same character as the input artist's name
+            all_csv_files = [f[:-4] for f in os.listdir(os.path.join(os.getcwd(), 'chord_scraper')) if
+                             f.endswith('.csv')]
+            similar_artist = next((a for a in all_csv_files if a.startswith(artist[0])), None)
+            if similar_artist:
+                suggestion = similar_artist
+                error_message = f"Couldn't find the artist in top 10. Did you mean {suggestion}?"
+            else:
+                error_message = "Couldn't find the artist in top 10. No similar artist found."
+            return render_template('SearchWithArtist.html', error_message=error_message)
+        return render_template('SearchWithArtist.html', result_data=result_data)
+    return render_template('SearchWithArtist.html')
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
+</code></pre>
+</div>
+</div>
+<p>Each time when you run <code>flask run</code>, a connection is opened to our unique MongoDB database. The MongoDB atlas connects to regional servers to setup operations. When a user submits a session (that relates to user credentials computation), database computing is called in flask through the db.py helper function and class objects - at run time, we interact with the dynamic database to achieve user login, login sessions, and creating an account.</p>
+<p>On cloud.mongodb.com, this is how our MongoDB deployment and collection looks like in real time:</p>
+<div id="cell-29" class="cell" data-executetime="{&quot;end_time&quot;:&quot;2024-03-22T16:22:22.905734Z&quot;,&quot;start_time&quot;:&quot;2024-03-22T16:22:22.872620Z&quot;}" data-jupyter="{&quot;outputs_hidden&quot;:false}" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> IPython.display <span class="im">import</span> Image</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>Image(filename<span class="op">=</span><span class="st">'/Users/athena/Desktop/hw6/mongodb.jpg'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="2">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/cell-8-output-1.jpeg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>In this blog post, you learned how to use the project tools behind Chordy. You learned how to run the website on your local device, along with how each of the main components of our website was created. In the future, you can easily import these functions using the chordy_functions_package from our Github repo. And, you can create your own version of Chordy by changing one of the three components in any way you please.</p>
+<p>Happy singing!</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/cell-31-1-664b9f73-52e7-47db-89de-bbaaada26ea1.jpeg" class="img-fluid figure-img"></p>
+<figcaption>dualipa.jpeg</figcaption>
+</figure>
+</div>
+<p><a href="https://www.harpersbazaar.com/celebrity/latest/a35833418/dua-lipa-2021-grammy-awards-performance/">Image source</a></p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      return note.innerHTML;
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
